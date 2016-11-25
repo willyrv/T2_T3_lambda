@@ -171,7 +171,28 @@ def cdf_T2_3_lambda(u, n, M):
     # Calculate the Q3 matrix
     Q3 = compute_Q3(n, M)    
     return 1 - quad(function2integrate, 0, np.infty, args=(u, Q3))[0]
+
+def cdf_T2_3_str(u, n, M):
+    """
+    Compute the theoretical cdc of T2 after T3 in a n-island model
+    """
     
+    Q2 = compute_Q2(n, M) 
+    P2u = linalg.expm(u*Q2)
+    M = float(M)
+    n = float(n) 
+    return (M + 2*n-2)/ (M*n + 2*n-2)*  P2u[0,2] + (1- (M + 2*n-2)/(M*n + 2*n-2))*P2u[1,2]
+    
+def cdf_T3_str(t, n, M):
+    """
+    Compute the cumulative distribution function of T3 (the first coalescence event
+    between two genes in a sample of 3 genes) for the n-islands model
+    """
+
+    Q3 = compute_Q3(n, M) 
+    P3t = linalg.expm(t*Q3)
+    return P3t[0,3] + P3t[0,4]
+
 def integrate_all_t(u, n, M):
     """
     Integrate out all possible t values (the values of T3)
